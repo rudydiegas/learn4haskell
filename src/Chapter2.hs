@@ -220,7 +220,7 @@ to guess first, what you will see.
 3
 
 >>> replicate 5 True
-[True, True, True, True, True]
+[True,True,True,True,True]
 
 >>> take 5 "Hello, World!"
 "Hello"
@@ -229,7 +229,7 @@ to guess first, what you will see.
 ", World!"
 
 >>> zip "abc" [1, 2, 3]  -- convert two lists to a single list of pairs
-[('a', 1),('b',2),('c',3)]
+[('a',1),('b',2),('c',3)]
 
 >>> words "Hello   Haskell     World!"  -- split the string into the list of words
 ["Hello","Haskell","World!"]
@@ -360,10 +360,8 @@ ghci> :l src/Chapter2.hs
 -}
 subList :: Int -> Int -> [a] -> [a]
 subList a b x
-    | b < a = []
-    | a < 0 || b < 0 = []
-    | a >= length x || b >= length x = []
-    | otherwise = take (b - a + 1) (drop a x)
+    | a < 0 || b < 0 || a > b || length x <= a = []
+    | otherwise = drop a (take (b + 1) x)
 
 
 {- |
@@ -762,7 +760,7 @@ value of the element itself
 🕯 HINT: Use combination of 'map' and 'replicate'
 -}
 smartReplicate :: [Int] -> [Int]
-smartReplicate l = error "smartReplicate: Not implemented!"
+smartReplicate = concatMap (\x -> replicate x x)
 
 {- |
 =⚔️= Task 9
@@ -775,7 +773,11 @@ the list with only those lists that contain a passed element.
 
 🕯 HINT: Use the 'elem' function to check whether an element belongs to a list
 -}
-contains = error "contains: Not implemented!"
+
+contains :: Int -> [[Int]] -> [[Int]]
+contains n = filter (elem n)
+{- contains _ [] = []                                                        -}
+{- contains n (x:xs) = if elem n x then x : contains n xs else contains n xs -}
 
 
 {- |
@@ -815,13 +817,16 @@ Let's now try to eta-reduce some of the functions and ensure that we
 mastered the skill of eta-reducing.
 -}
 divideTenBy :: Int -> Int
-divideTenBy x = div 10 x
+divideTenBy = div 10
 
 -- TODO: type ;)
-listElementsLessThan x l = filter (< x) l
+
+listElementsLessThan :: Int -> [Int] -> [Int]
+listElementsLessThan x = filter (< x)
 
 -- Can you eta-reduce this one???
-pairMul xs ys = zipWith (*) xs ys
+pairMul :: [Int] -> [Int] -> [Int]
+pairMul = zipWith (*)
 
 {- |
 =🛡= Lazy evaluation
@@ -876,7 +881,11 @@ list.
 
 🕯 HINT: Use the 'cycle' function
 -}
-rotate = error "rotate: Not implemented!"
+
+rotate :: Int -> [Int] -> [Int]
+rotate n l
+  | n < 0 = []
+  | otherwise = take (length l) (drop n (cycle l))
 
 {- |
 =💣= Task 12*
@@ -892,7 +901,9 @@ and reverses it.
   function, but in this task, you need to implement it manually. No
   cheating!
 -}
-rewind = error "rewind: Not Implemented!"
+rewind :: [a] -> [a]
+rewind [] = []
+rewind (x:xs) = rewind xs ++ [x] 
 
 
 {-
