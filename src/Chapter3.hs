@@ -1,5 +1,5 @@
 {- 👋 Welcome to Chapter Three of our journey, Courageous Knight!
-
+init
 Glad to see you back for more challenges. You fought great for the glory of the
 Functional Programming in the previous Chapters. We are grateful that you are
 continuing to walk this road with us.
