@@ -53,6 +53,8 @@ provide more top-level type signatures, especially when learning Haskell.
 
 module Chapter3 where
 
+import Data.Maybe (isNothing)
+
 {-
 =🛡= Types in Haskell
 
@@ -345,7 +347,7 @@ Create your own book type of your dreams!
 -}
 
 data Book = Book
-    { bookName    :: String
+    { bookName   :: String
     , bookAuthor :: String
     , bookPages  :: Int
     }
@@ -514,15 +516,15 @@ After defining the city, implement the following functions:
    and at least 10 living __people__ inside in all houses of the city in total.
 -}
 
-data Castle = Castle 
+newtype Castle = Castle 
     { castleName :: String }
 
-data Wall = Wall
+newtype Wall = Wall
     { numWalls :: Int }
 
 data CommunitySpace = Church | Library
 
-data House = House
+newtype House = House
     { houseResidents :: Int }
 
 data City = City
@@ -534,6 +536,19 @@ data City = City
 
 buildCastle :: City -> String -> City
 buildCastle city name = city { cityCastle = Just (Castle name) }
+
+buildHouse :: Int -> City -> City
+buildHouse numRes city = city { cityHouses = House numRes : cityHouses city}
+
+buildWalls :: City -> City
+buildWalls city
+        | isNothing  (cityCastle city)   = city
+        | lessThan10 (cityHouses city) 0 = city
+        | otherwise                      = city { cityWall = Wall 4 }
+        where
+            lessThan10 :: [House] -> Int -> Bool
+            lessThan10 [] num = num < 10
+            lessThan10 (x:xs) num = lessThan10 xs (houseResidents x + num)
 
 
 {-
