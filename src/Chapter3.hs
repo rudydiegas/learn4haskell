@@ -1,5 +1,5 @@
 {- 👋 Welcome to Chapter Three of our journey, Courageous Knight!
-init
+
 Glad to see you back for more challenges. You fought great for the glory of the
 Functional Programming in the previous Chapters. We are grateful that you are
 continuing to walk this road with us.
@@ -344,6 +344,12 @@ of a book, but you are not limited only by the book properties we described.
 Create your own book type of your dreams!
 -}
 
+data Book = Book
+    { bookName    :: String
+    , bookAuthor :: String
+    , bookPages  :: Int
+    }
+
 {- |
 =⚔️= Task 2
 
@@ -375,6 +381,24 @@ after the fight. The battle has the following possible outcomes:
 ♫ NOTE: In this task, you need to implement only a single round of the fight.
 
 -}
+
+data Knight = Knight
+    { knightHealth :: Int
+    , knightAttack :: Int
+    , knightGold   :: Int
+    } deriving (Show)
+
+data Monster = Monster
+    { monsterHealth :: Int
+    , monsterAttack :: Int
+    , monsterGold   :: Int
+    } deriving (Show)
+
+fight :: Monster -> Knight -> Int
+fight m k
+    | monsterHealth m <= knightAttack k = knightGold k + monsterGold m
+    | knightHealth k <= monsterAttack m = -1 
+    | otherwise = knightGold k
 
 {- |
 =🛡= Sum types
@@ -462,6 +486,14 @@ Create a simple enumeration for the meal types (e.g. breakfast). The one who
 comes up with the most number of names wins the challenge. Use your creativity!
 -}
 
+data Meal
+    = Breakfast
+    | Brunch
+    | Lunch
+    | Linner
+    | Dinner
+    | Snack
+
 {- |
 =⚔️= Task 4
 
@@ -481,6 +513,28 @@ After defining the city, implement the following functions:
    complicated task, walls can be built only if the city has a castle
    and at least 10 living __people__ inside in all houses of the city in total.
 -}
+
+data Castle = Castle 
+    { castleName :: String }
+
+data Wall = Wall
+    { numWalls :: Int }
+
+data CommunitySpace = Church | Library
+
+data House = House
+    { houseResidents :: Int }
+
+data City = City
+    { cityCastle :: Maybe Castle
+    , cityWall   :: Wall
+    , citySpace  :: CommunitySpace
+    , cityHouses :: [House]
+    }
+
+buildCastle :: City -> String -> City
+buildCastle city name = city { cityCastle = Just (Castle name) }
+
 
 {-
 =🛡= Newtypes
@@ -562,22 +616,38 @@ introducing extra newtypes.
 🕯 HINT: if you complete this task properly, you don't need to change the
     implementation of the "hitPlayer" function at all!
 -}
+
+newtype Health = Health 
+       { numHealth :: Int }
+newtype Armor     = Armor
+       { numArmor :: Int }
+newtype Attack    = Attack
+       { numAttack :: Int }
+newtype Dexterity = Dexterity
+       { numDexterity :: Int }
+newtype Strength  = Strength
+       { numStrength :: Int }
+newtype Damage  = Damage
+       { numDamage :: Int }
+newtype Defense  = Defense
+       { numDefense :: Int }
+
 data Player = Player
-    { playerHealth    :: Int
-    , playerArmor     :: Int
-    , playerAttack    :: Int
-    , playerDexterity :: Int
-    , playerStrength  :: Int
+    { playerHealth    :: Health
+    , playerArmor     :: Armor    
+    , playerAttack    :: Attack   
+    , playerDexterity :: Dexterity
+    , playerStrength  :: Strength 
     }
 
-calculatePlayerDamage :: Int -> Int -> Int
-calculatePlayerDamage attack strength = attack + strength
+calculatePlayerDamage :: Attack -> Strength -> Damage
+calculatePlayerDamage attack strength = Damage (numAttack attack + numStrength strength)
 
-calculatePlayerDefense :: Int -> Int -> Int
-calculatePlayerDefense armor dexterity = armor * dexterity
+calculatePlayerDefense :: Armor -> Dexterity -> Defense
+calculatePlayerDefense armor dexterity = Defense (numArmor armor * numDexterity dexterity)
 
-calculatePlayerHit :: Int -> Int -> Int -> Int
-calculatePlayerHit damage defense health = health + defense - damage
+calculatePlayerHit :: Damage -> Defense -> Health -> Health
+calculatePlayerHit damage defense health = Health (numHealth health + numDefense defense - numDamage damage)
 
 -- The second player hits first player and the new first player is returned
 hitPlayer :: Player -> Player -> Player
