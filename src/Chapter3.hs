@@ -840,6 +840,19 @@ parametrise data types in places where values can be of any general type.
   maybe-treasure ;)
 -}
 
+newtype Dragon x = Dragon
+    { dragonPower :: x }
+
+data TreasureChest x = TreasureChest
+    { treasureChestGold :: Int
+    , treasureChestLoot :: x
+    }
+
+data Lair power loot = Lair
+    { lairDragon :: Dragon power
+    , lairChest  :: Maybe (TreasureChest loot)
+    }
+
 {-
 =🛡= Typeclasses
 
