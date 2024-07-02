@@ -53,7 +53,7 @@ provide more top-level type signatures, especially when learning Haskell.
 
 module Chapter3 where
 
-import Data.Maybe (isNothing)
+import Data.Maybe (isNothing, Maybe)
 
 {-
 =🛡= Types in Haskell
@@ -1003,12 +1003,32 @@ We will call such a typeclass "Append". You can find its definition below.
 Implement instances of "Append" for the following types:
 
   ✧ The "Gold" newtype where append is the addition
-  ✧ "List" where append is list concatenation
+  ✧ "List" where append is list concatenatio{ 
+, 
+}n
   ✧ *(Challenge): "Maybe" where append is appending of values inside "Just" constructors
 
 -}
+
+newtype Gold = Gold
+    { goldAmt :: Int }
+
 class Append a where
     append :: a -> a -> a
+
+instance Append Gold where
+    append :: Gold -> Gold -> Gold
+    append x y = Gold (goldAmt x + goldAmt y)
+
+instance Append [a] where
+    append :: [a] -> [a] -> [a]
+    append x y = x ++ y
+
+instance (Append a) => Append (Maybe a) where
+    append :: Maybe a -> Maybe a -> Maybe a
+    append (Just x) (Just y) = append (Just x) (Just y)
+    append _ _               = Nothing
+
 
 
 {-
@@ -1071,7 +1091,40 @@ implement the following functions:
 🕯 HINT: to implement this task, derive some standard typeclasses
 -}
 
-{-
+data DayOfWeek
+    = Sunday
+    | Monday
+    | Tuesday
+    | Wednesday
+    | Thursday
+    | Friday
+    | Saturday
+    deriving(Show, Eq)
+
+isWeekend :: DayOfWeek -> Bool
+isWeekend d = d == Sunday || d == Saturday
+
+nextDay :: DayOfWeek -> DayOfWeek
+nextDay d = case d of
+        Sunday    -> Monday
+        Monday    -> Tuesday
+        Tuesday   -> Wednesday
+        Wednesday -> Thursday
+        Thursday  -> Friday
+        Friday    -> Saturday
+        Saturday  -> Sunday 
+
+daysToParty :: DayOfWeek -> Int
+daysToParty d = case d of
+        Saturday  -> 6
+        Sunday    -> 5
+        Monday    -> 4 
+        Tuesday   -> 3
+        Wednesday -> 2
+        Thursday  -> 1
+        Friday    -> 0
+
+{-                   
 =💣= Task 9*
 
 You got to the end of Chapter Three, Brave Warrior! I hope you are ready for the
@@ -1105,6 +1158,7 @@ properties using typeclasses, but they are different data types in the end.
 Implement data types and typeclasses, describing such a battle between two
 contestants, and write a function that decides the outcome of a fight!
 -}
+
 
 
 {-
