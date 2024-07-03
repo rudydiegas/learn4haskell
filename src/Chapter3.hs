@@ -1159,6 +1159,25 @@ Implement data types and typeclasses, describing such a battle between two
 contestants, and write a function that decides the outcome of a fight!
 -}
 
+data MMonster = MMonster
+        { mmonsterHealth :: Int
+        , mmonsterAttack :: Int
+        } deriving(Show)
+
+data KKnight = KKnight
+        { kknightHealth  :: Int
+        , kknightAttack  :: Int
+        , kknightDefense :: Int
+        } deriving(Show)
+
+class Attack a where
+    attack :: a -> a -> a
+
+instance Battle KKnight where
+    battle :: KKnight -> Either KKnight MMonster -> Either KKnight MMonster 
+    battle opp0 opp1 = 
+
+
 
 
 {-
