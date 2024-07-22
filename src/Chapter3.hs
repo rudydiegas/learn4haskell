@@ -1170,12 +1170,12 @@ data KKnight = KKnight
         , kknightDefense :: Int
         } deriving(Show)
 
-class Attack a where
+class Creature a where
     attack :: a -> a -> a
 
-instance Battle KKnight where
-    battle :: KKnight -> Either KKnight MMonster -> Either KKnight MMonster 
-    battle opp0 opp1 = 
+-- instance Battle KKnight where
+--     battle :: KKnight -> Either KKnight MMonster -> Either KKnight MMonster 
+--     battle opp0 opp1 = 
 
 
 
